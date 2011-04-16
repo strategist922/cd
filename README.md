@@ -25,7 +25,7 @@ Guts
 	* [iRedis](https://github.com/antirez/redis) Redis php library used to store data
 	* everybody gets cookied and recieves the same option on subsequent visits to the start page
 	* they are only counted once on the goal page
-	* view.metrics.php gives you an example of a nice conversion page
+	* view.metrics.php gives you an example of a nice conversion page and uses the Google Visualization JS Library
 
 ![view.metrics.php](http://dl.dropbox.com/u/2024444/screenshot.png)
 	
