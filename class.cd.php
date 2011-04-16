@@ -2,7 +2,7 @@
 /**
  * c/d testing
  *
- * @author Jacob Oliver <jacob@vimeo.com>
+ * @author Jacob Oliver
  * @version 0.0.1
  */
 
@@ -10,6 +10,14 @@ include_once 'class.abcache.php';
 
 class cd
 {
+	/**
+	* start your A/B test
+	*
+	* @param string name
+	* @param mixed options
+	* @param boolean force
+	* @return mixed
+	*/
     public static function start($name, $options = null, $force = false)
     {
         $subject = new Subject($name,$options);
@@ -18,6 +26,13 @@ class cd
         return is_array($options) ? $options[$subject->key] : $options;
     }
 
+	/**
+	* finish your A/B test
+	*
+	* @param string name
+	* @param boolean force
+	* @return void
+	*/
     public static function goal($name, $force = false)
     {
         $subject = new Subject($name);
@@ -25,6 +40,12 @@ class cd
             $subject->converted();
     }
 	
+	/**
+	* get conversion rates
+	*
+	* @param string name
+	* @return array
+	*/
 	public static function getConversions($name)
 	{
 		$cache = new ABCache();
@@ -41,6 +62,15 @@ class cd
 		return array($conversions,$options);
 	}
 	
+	/**
+	* computes z-score and calculates probability of winning
+	*
+	* @param int converted_1
+	* @param int tested_1
+	* @param int converted_2
+	* @param int tested_2
+	* @return float
+	*/
 	public static function calculateProbability($converted_1,$tested_1,$converted_2,$tested_2)
 	{
 		$z_score = self::_calculateZScore($converted_1,$tested_1,$converted_2,$tested_2);
@@ -59,6 +89,15 @@ class cd
 		return ($c*exp(-$z_score *$z_score/2.0)*$t*($t*($t*($t*($t*$b5+$b4)+$b3)+$b2)+$b1));
 	}
 	
+	/**
+	* calculates z-score
+	*
+	* @param int converted1
+	* @param int tested1
+	* @param int converted2
+	* @param int tested2
+	* @return float
+	*/
 	private static function _calculateZScore($converted1,$total1,$converted2,$total2)
 	{
 		$rate1 = $converted1/$total1;
@@ -66,6 +105,14 @@ class cd
 		return ($rate1-$rate2)/sqrt(($rate1*(1-$rate1)/$total1)+($rate2*(1-$rate2)/$total2));
 	}
 	
+	/**
+	* calculates standard error
+	*
+	* @param int converted
+	* @param int tested
+	* @param int percentile
+	* @return float
+	*/
 	public static function calculateSE($converted,$total,$percentile = 80)
 	{
 		$percent_to_z = array(95 => 1.96, 90 => 1.645, 80 => 1.282);
@@ -74,6 +121,15 @@ class cd
 		return $z_score*($rate*(1-$rate)/$total);
 	}
 	
+	/**
+	* computes percent improvement
+	*
+	* @param int converted1
+	* @param int tested1
+	* @param int converted2
+	* @param int tested2
+	* @return float
+	*/
 	public static function calculateImprovement($converted1,$total1,$converted2,$total2)
 	{
 		return (($converted1/$total1)-($converted2/$total2))/($converted2/$total2);
@@ -87,6 +143,13 @@ class Subject
 	public $key;		//which option
 	public $status; 	//1 for converted else 0
 
+	/**
+	* constructor
+	*
+	* @param string test_name
+	* @param mixed options
+	* @return void
+	*/
 	public function __construct($test_name,$options = null)
 	{
 		$this->test_name = $test_name;
@@ -104,6 +167,11 @@ class Subject
 		}
 	}
 	
+	/**
+	* create a subject
+	*
+	* @return void
+	*/
 	public function create()
 	{
 		$this->cache->increment($this->test_name.':start',$this->key.':'.date('Y-m-d'));
@@ -114,6 +182,11 @@ class Subject
 		$this->_save();
 	}
 	
+	/**
+	* measure a converions
+	*
+	* @return void
+	*/
 	public function converted()
 	{	
 		$this->cache->increment($this->test_name.':finish',$this->key.':'.date('Y-m-d',$this->start_time));
@@ -121,6 +194,11 @@ class Subject
 		$this->_save();
 	}
 	
+	/**
+	* save a subject
+	*
+	* @return void
+	*/
 	private function _save()
 	{
 		$tests = explode(':',$_COOKIE['ab']);

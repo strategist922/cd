@@ -2,7 +2,7 @@
 /**
  * example Cache layer... must have an increment function
  *
- * @author Jacob Oliver <jacob@vimeo.com>
+ * @author Jacob Oliver
  * @version 0.0.1
  */
 
