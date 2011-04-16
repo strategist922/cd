@@ -19,8 +19,6 @@ class ABCache
 
   	public function increment($name,$key) 
 	{
-		var_dump($name);
-		var_dump($key);
 		$this->redis->hincrby($name,$key,1);
 	}
 	
