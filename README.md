@@ -1,11 +1,13 @@
 c/d
 ======
 
-A simple A/B testing framework in php
+A simple A/B testing framework in php  
+[iRedis](https://github.com/antirez/redis) must be included somewhere 
 
 
 Setup
 --------
+
 include
 
 	include_once 'class.cd.php'
@@ -17,12 +19,13 @@ start
 finish
 
 	CD::goal('test');
-	
-that simple! c/d takes care of the rest!
+
+
+and that's it! c/d takes care of the rest!
 	
 Guts
 --------
-	* [iRedis](https://github.com/antirez/redis) Redis php library used to store data
+	* iRedis php library used to store data
 	* everybody gets cookied and recieves the same option on subsequent visits to the start page
 	* they are only counted once on the goal page
 	* view.metrics.php gives you an example of a nice conversion page and uses the Google Visualization JS Library
